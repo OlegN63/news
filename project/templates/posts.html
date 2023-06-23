@@ -1,0 +1,44 @@
+<!--  наследуемся от шаблона default.html, который мы создавали для flatpages -->
+{% extends 'flatpages/default.html' %}
+
+<!--Подключить свои фильтры. Сделать это можно с помощью указания
+тега {% load custom_filters %}. Где custom_filters — это название Python файла-->
+{% load custom_filters %}
+
+
+{% block title %}
+Posts
+{% endblock title %}
+
+<!-- В контенте на странице мы выводим все новости -->
+{% block content %}
+    <h1>Все новости</h1>
+    <h3>Количество новостей: {{ posts|length }}</h3>
+    <!-- Используем переданную из представления переменную time_now
+    и применяем к ней фильтр date. По назначению этот фильтр очень похож
+    на метод strftime у объекта datetime в Python — вывод времени
+    в указанном формате. -->
+    <h3>{{ time_now|date:'d M Y' }}</h3>
+    <hr>
+    {%if posts %}
+        <table><!-- Начинаем описывать таблицу -->
+            <thead>
+                <!-- th - ячейка заголовка таблицы -->
+                <th>Заголовок</th>
+                <th>Дата</th>
+                <th>Текст</th>
+            </thead>
+
+           {% for post in posts %}
+            <tr><!-- Добавляем строку -->
+                <!-- td - Добавляем ячейку в строку -->
+                <td>{{ post.header|censor }}</td>
+                <td>{{ post.time_in|date:'d M Y'}}</td>
+                <td>{{ post.text|truncatechars:20|censor }}</td>
+            </tr> <!-- Не забываем закрыть HTML-тег строки -->
+           {% endfor %}
+        </table><!-- ... и таблицы -->
+    {% else %}
+       <h2>Новостей нет!Скукота</h2>
+    {% endif %}
+{% endblock content %}ml>
